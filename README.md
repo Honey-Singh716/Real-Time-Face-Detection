@@ -22,6 +22,9 @@ dataset/
     └── ...
 ```
 
+
+Dataset Link: https://www.kaggle.com/datasets/honeysingh12coder/face-mask-or-unmask
+
 Each subdirectory contains images of faces with and without masks respectively.
 
 ## Installation

@@ -154,8 +154,6 @@ cython_debug/
 dataset/
 data/
 *.nbconvert.ipynb
-models/mask_detector.h5
-models/mask_detector.keras
 *.png
 *.jpg
 *.jpeg

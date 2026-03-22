@@ -96,17 +96,26 @@ class VideoProcessor(VideoProcessorBase):
                         label_conf = pred if label == "No Mask" else 1 - pred
 
                     color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-                    cv2.rectangle(img, (startX, startY), (endX, endY), color, 2)
-                    cv2.putText(img, f"{label}: {label_conf:.2f}", (startX, startY - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+                    
+                    # DRAW LABEL BOX (Solid background)
+                    label_text = f"{label}: {label_conf*100:.1f}%"
+                    (tw, th), baseline = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
+                    
+                    # Ensure label box stays in frame
+                    ty = max(startY, th + 10)
+                    cv2.rectangle(img, (startX, ty - th - 10), (startX + tw, ty), color, -1)
+                    cv2.putText(img, label_text, (startX, ty - 5),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                    
+                    # BORDER
+                    cv2.rectangle(img, (startX, startY), (endX, endY), color, 3)
         
         return av.VideoFrame.from_ndarray(img, format="bgr24")
 
 def main():
     st.title("😷 Real-Time Face Mask Detection")
     st.markdown("""
-    This application uses **Transfer Learning (MobileNetV2)** and **OpenCV DNN** 
-    to detect face masks in real-time.
+    This app detects face masks in real-time. Click **START** to begin.
     """)
 
     mask_model, face_net = get_models()
@@ -127,7 +136,7 @@ def main():
         key="mask-detection",
         mode=WebRtcMode.SENDRECV,
         rtc_configuration=RTC_CONFIGURATION,
-        media_stream_constraints={"video": True, "audio": False}, # DISABLE AUDIO TO FIX NotReadableError
+        media_stream_constraints={"video": True, "audio": False},
         video_processor_factory=lambda: VideoProcessor(
             mask_model, face_net, opt_threshold, pos_class, conf_threshold
         ),
@@ -135,7 +144,6 @@ def main():
     )
 
     st.markdown("---")
-    st.info(f"Model: MobileNetV2 | Positive Class: {pos_class}")
 
 if __name__ == "__main__":
     main()

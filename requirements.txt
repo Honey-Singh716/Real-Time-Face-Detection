@@ -1,6 +1,9 @@
 tensorflow-cpu
-opencv-python
+opencv-python-headless
 numpy
 matplotlib
 scikit-learn
 imutils
+streamlit
+streamlit-webrtc
+av

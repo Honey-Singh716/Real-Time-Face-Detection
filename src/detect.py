@@ -11,9 +11,9 @@ from .model_utils import load_trained_model
 
 
 def main():
-    # ===============================
+     
     # Load Mask Classification Model
-    # ===============================
+     
     try:
         model = load_trained_model()
         print("Mask model loaded successfully.")
@@ -23,9 +23,9 @@ def main():
 
     # Confirm model output logic
     print("Reminder: Sigmoid output = probability of class index 1")
-    # ===============================
+     
     # Load DNN Face Detector (ABSOLUTE PATH FIX)
-    # ===============================
+     
     try:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         prototxt_path = os.path.join(BASE_DIR, "models", "deploy.prototxt")
@@ -44,9 +44,9 @@ def main():
         print("Haar Cascade loaded successfully.")
         detector_type = 'haar'
 
-    # ===============================
+     
     # Start Webcam
-    # ===============================
+     
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot open webcam.")
@@ -97,9 +97,9 @@ def main():
         lab[:, :, 0] = clahe.apply(lab[:, :, 0])
         frame = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
-        # ===============================
+         
         # Face Detection (Every N Frames)
-        # ===============================
+         
         if detector_type == 'dnn':
             if frame_count % frame_skip == 0:
 
@@ -272,9 +272,9 @@ def main():
                             2
                         )
 
-        # ===============================
+         
         # FPS (Smoothed)
-        # ===============================
+         
         curr_time = time.time()
         instant_fps = 1 / (curr_time - prev_time)
         prev_time = curr_time

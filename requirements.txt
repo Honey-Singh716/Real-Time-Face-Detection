@@ -7,3 +7,4 @@ imutils
 streamlit
 streamlit-webrtc
 av
+tornado~=6.2

@@ -62,7 +62,8 @@ class VideoProcessor(VideoProcessorBase):
         h, w = img.shape[:2]
         
         # Face Detection
-        blob = cv2.dnn.blobFromImage(cv2.resize(img, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+        # blobFromImage automatically resizes, so we drop the redundant cv2.resize() call
+        blob = cv2.dnn.blobFromImage(img, 1.0, (300, 300), (104.0, 177.0, 123.0))
         self.face_net.setInput(blob)
         detections = self.face_net.forward()
 
@@ -85,7 +86,8 @@ class VideoProcessor(VideoProcessorBase):
                     face_expanded = np.expand_dims(face_preprocessed, axis=0)
 
                     # Prediction
-                    pred = self.mask_model.predict(face_expanded, verbose=0)[0][0]
+                    # model(..., training=False) is significantly faster for single frames than model.predict()
+                    pred = float(self.mask_model(face_expanded, training=False)[0][0])
                     
                     # Logic based on positive class
                     if self.pos_class == 'mask':
